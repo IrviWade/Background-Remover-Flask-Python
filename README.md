@@ -67,6 +67,9 @@ Background-Remover-Flask-Python/
 ├── requirements.txt       # Project dependencies
 ├── LICENSE.txt            # MIT License file
 ├── .gitignore             # Git ignore file
+├── assets
+│   └── input image.jpg
+│   └── processed image.jpg
 └── README.md              # Project documentation
 ```
 
