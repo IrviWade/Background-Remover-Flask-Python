@@ -6,16 +6,20 @@
 A web application built with Flask that removes backgrounds from images using the rembg library.
 
 ## 📜 About
-This project implements a simple web interface for removing backgrounds from images. It demonstrates how to integrate the rembg library with Flask to create a functional background removal tool. The application is designed to be user-friendly and efficient for processing images.
+This project provides a user-friendly web interface for removing backgrounds from images. It leverages the rembg library for efficient background removal and supports multiple image formats. The application is designed to be responsive, accessible, and easy to use.
 
 ## ✨ Features
-- Web-based interface for easy access
-- Supports multiple image formats
-- Fast processing using rembg library
-- Responsive design for various devices
-- Direct download of processed images
+- Web-based interface for seamless image uploads
+- Supports JPG, PNG, GIF, and BMP image formats
+- Fast and reliable background removal using rembg
+- Responsive design compatible with desktop and mobile devices
+- Displays processed images with an option to download
 
 ## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.8 or higher
+- pip package manager
 
 ### Installation
 1. Clone the repository:
@@ -24,44 +28,64 @@ This project implements a simple web interface for removing backgrounds from ima
    cd Background-Remover-Flask-Python
    ```
 
-2. Install required dependencies:
+2. Create a virtual environment (recommended):
    ```bash
-   pip install flask rembg pillow
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
-3. Run the application:
+3. Install required dependencies:
    ```bash
-   python app.py
+   pip install -r requirements.txt
    ```
 
-### Basic Usage
-```python
-# The application provides a web interface for background removal
-# Open your browser and navigate to http://localhost:4000
-# Upload an image and click "Remove Background"
-# The processed image will be displayed with background removed
+4. Run the application:
+   ```bash
+   python main.py
+   ```
+
+5. Open your browser and navigate to `http://localhost:4000`.
+
+### Usage
+- Access the web interface at `http://localhost:4000`
+- Upload an image by clicking "Choose file" or dragging and dropping
+- Click "Remove Background" to process the image
+- View the processed image and download the result
+
+## 📖 Project Structure
+```
+Background-Remover-Flask-Python/
+├── main.py                # Main application code
+├── templates/
+│   └── index.html         # HTML template for the web interface
+├── requirements.txt       # Project dependencies
+├── LICENSE.txt            # MIT License file
+├── .gitignore             # Git ignore file
+└── README.md              # Project documentation
 ```
 
-### Example Usage
-```python
-# Example using the web interface:
-# 1. Open the application in your browser
-# 2. Select an image file (e.g., "input.jpg")
-# 3. Click "Remove Background"
-# 4. Download the processed image
+## 📋 Requirements
+See [requirements.txt](requirements.txt) for a complete list of dependencies.
+
+## ⚙️ Deployment
+For production deployment, use a WSGI server like Gunicorn:
+```bash
+gunicorn -w 4 -b 0.0.0.0:4000 main:create_app
 ```
 
-## 📖 Documentation
-### How It Works
-The application uses the rembg library to remove backgrounds from images. The process involves:
-1. Uploading an image through the web interface
-2. Processing the image with rembg's background removal algorithm
-3. Converting the processed image to a base64 encoded string for display
-4. Providing a download link for the processed image
+Set the `PORT` environment variable for custom port configuration:
+```bash
+export PORT=8080  # On Windows: set PORT=8080
+```
+
+## 🛠️ Troubleshooting
+- Ensure all dependencies are installed correctly.
+- Verify that the uploaded image is in a supported format (JPG, PNG, GIF, BMP).
+- Check the console for error messages if processing fails.
 
 ## ⚖️ License
-Distributed under the MIT License. See [LICENSE](LICENSE) for details.
+Distributed under the MIT License. See [LICENSE.txt](LICENSE.txt) for details.
 
 ---
 
-> **Note**: This implementation is for educational purposes. The background removal quality depends on the rembg library's capabilities.
+> **Note**: The quality of background removal depends on the rembg library's capabilities. For best results, use high-quality images with clear foregrounds.
