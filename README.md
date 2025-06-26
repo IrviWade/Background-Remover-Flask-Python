@@ -15,6 +15,12 @@ This project provides a user-friendly web interface for removing backgrounds fro
 - Responsive design compatible with desktop and mobile devices
 - Displays processed images with an option to download
 
+### Input Image:
+<img src="assets/input%20image.jpg" alt="Input Image" width="500">
+
+### Processed Image:
+<img src="assets/processed%20image.jpg" alt="Processed Image" width="500">
+
 ## 🚀 Quick Start
 
 ### Prerequisites
