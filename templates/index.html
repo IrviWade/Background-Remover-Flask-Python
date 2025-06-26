@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Remove Background</title>
+    <title>Background removal app</title>
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
@@ -14,107 +14,204 @@
             height: 100vh;
             margin: 0;
             flex-direction: column;
-            background-color: #faebef;
+            background-color: #eafbfa;
         }
 
-        .container {
+        .wrapper {
             text-align: center;
-            background-color: #fcf6f5;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #f5fcfc;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .file-upload-area {
+            margin-top: 25px;
+            padding: 30px;
+            border: 2px dashed #17a2b8;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #ffffff;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .file-upload-area:hover {
+            background-color: #f0f9ff;
+            border-color: #138496;
+        }
+
+        .file-upload-area.dragover {
+            background-color: #e6f7ff;
+            border-color: #138496;
+            transform: scale(1.02);
         }
 
         input[type="file"] {
-            margin-top: 20px;
-            padding: 10px;
-            border: 2px dashed #007bff;
-            border-radius: 8px;
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
             cursor: pointer;
-            background-color: #ffffff;
+        }
+
+        .upload-text {
+            color: #17a2b8;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .upload-subtext {
+            color: #6c757d;
+            font-size: 14px;
+            margin-top: 5px;
         }
 
         button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #007bff;
+            margin-top: 25px;
+            padding: 12px 25px;
+            background-color: #17a2b8;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #138496;
         }
 
-        .image-box {
+        .result-container {
             display: inline-block;
-            margin-top: 20px;
-            padding: 10px;
-            border: 2px solid #007bff;
-            border-radius: 8px;
+            margin-top: 25px;
+            padding: 12px;
+            border: 2px solid #17a2b8;
+            border-radius: 10px;
             background-color: #ffffff;
         }
 
-        .result-image {
-            width: 300px;
-            border-radius: 4px;
+        .final-image {
+            width: 320px;
+            border-radius: 6px;
         }
 
-        .download-button {
+        .download-link {
             display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
+            margin-top: 12px;
+            padding: 12px 25px;
             background-color: #28a745;
             color: white;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 10px;
             transition: background-color 0.3s ease;
         }
 
-        .download-button:hover {
+        .download-link:hover {
             background-color: #218838;
         }
 
-        .btn-wrap {
+        .action-area {
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Progress Indicator */
-        .loading {
+        /* Status Display */
+        .status {
             display: none;
-            margin-top: 20px;
-            font-size: 16px;
-            color: #007bff;
+            margin-top: 25px;
+            font-size: 18px;
+            color: #17a2b8;
         }
     </style>
     <script>
-        function showLoading() {
-            document.getElementById('loading').style.display = 'block';
+        function showStatus() {
+            document.getElementById('status').style.display = 'block';
         }
+
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Drag and drop functionality
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            // Prevent default drag behaviors
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            // Highlight drop area when item is dragged over it
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            // Handle dropped files
+            uploadArea.addEventListener('drop', handleDrop, false);
+
+            // Update text when file is selected
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files.length > 0) {
+                    updateUploadText(e.target.files[0].name);
+                }
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight(e) {
+                uploadArea.classList.add('dragover');
+            }
+
+            function unhighlight(e) {
+                uploadArea.classList.remove('dragover');
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    updateUploadText(files[0].name);
+                }
+            }
+
+            function updateUploadText(fileName) {
+                const uploadText = document.querySelector('.upload-text');
+                uploadText.innerHTML = `✅ Selected: ${fileName}`;
+            }
+        });
     </script>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Remove Background from Image</h1>
-        <form enctype="multipart/form-data" method="POST" onsubmit="showLoading()">
-            <input type="file" name="image" accept="image/*" required>
+    <div class="wrapper">
+        <h1>Image Background Remover</h1>
+        <form enctype="multipart/form-data" method="POST" onsubmit="showStatus()">
+            <div class="file-upload-area" id="uploadArea">
+                <input type="file" name="image" accept="image/*" required id="fileInput">
+                <div class="upload-text">📁 Choose file or drag & drop here</div>
+                <div class="upload-subtext">Supports: JPG, PNG, GIF, BMP</div>
+            </div>
             <button type="submit">Remove Background</button>
         </form>
 
-        <div id="loading" class="loading">Processing, please wait...</div>
+        <div id="status" class="status">Working on your image...</div>
 
         {% if image_data %}
-            <div class="image-box">
-                <img src="data:image/png;base64, {{ image_data }}" alt="Processed Image" class="result-image"/>
+            <div class="result-container">
+                <img src="data:image/png;base64, {{ image_data }}" alt="Background Removed" class="final-image"/>
             </div>
-            <div class="btn-wrap">
-                <a href="data:image/png;base64, {{ image_data }}" download="remove_bg.png" class="download-button">Download Image</a>
+            <div class="action-area">
+                <a href="data:image/png;base64, {{ image_data }}" download="bg_removed.png" class="download-link">Download Result</a>
             </div>
         {% endif %}
     </div>
